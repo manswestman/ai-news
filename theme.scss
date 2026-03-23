@@ -1,0 +1,31 @@
+/*-- scss:defaults --*/
+// 1. Global Mermaid Variables 
+// Generated from Mermaid themeVariables config
+ 
+// does not work - removed...
+
+/*-- scss:rules --*/
+// 2. Custom Code Block Highlighting
+div.sourceCode {
+    background-color: #222222 !important;
+}
+code span.kw { color: #00bc8c !important; font-weight: bold; }
+code span.st { color: #00bc8c !important; }
+code span.co { color: #adb5bd !important; font-style: italic; }
+code span.op { color: #00bc8c !important; }
+code span.fu { color: #ffffff !important; font-weight: bold; }
+code span.va { color: #ffffff !important; }
+code span.cf { color: #00bc8c !important; font-weight: bold; }
+
+/* 3. Navigation Bar Overrides */
+.navbar-brand img {
+    max-height: 30px !important; /* Increase this value to scale the logo */
+    height: auto !important;     /* Ensures the image doesn't stretch/distort */
+}
+
+/* 4. Homepage Listing Overrides */
+.listing-description {
+    font-size: 0.75rem !important; /* Reduces the size to 85% of the base font */
+    color: #adb5bd !important;     /* Mutes the color to push it down the visual hierarchy */
+    line-height: 1.4 !important;   /* Tightens the spacing for smaller text */
+}

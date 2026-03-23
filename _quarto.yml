@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "CAIS Newsletter"
+  description: "R&D Updates and Architectural Analysis"
+  navbar:
+    logo: logo.png
+    background: "#2d2d2d"
+    left:
+      - href: index.qmd
+        text: Home
+
+format:
+  html:
+    theme:
+      - darkly
+      - theme.scss
+    toc: true
+mermaid:
+  theme: dark
+    

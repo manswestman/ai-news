@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "issues/issue-1.html",
+    "href": "issues/issue-1.html",
+    "title": "AI Digest #01 – Welcome to KANs!",
+    "section": "",
+    "text": "KANs replace fixed activation functions with learnable splines.\n\n\n\n\n\n%%{init: {\n  \"theme\": \"base\",\n  \"themeVariables\": {\n    \"background\":       \"#222222\",\n    \"primaryColor\":       \"#2d2d2d\",\n    \"primaryBorderColor\": \"#00bc8c\",\n    \"primaryTextColor\":   \"#ffffff\",\n    \"secondaryColor\":     \"#2d2d2d\",\n    \"tertiaryColor\":      \"#2d2d2d\",\n    \"lineColor\":          \"#00bc8c\",\n    \"edgeLabelBackground\":\"#222222\",\n    \"clusterBkg\":         \"#2d2d2d\",\n    \"clusterBorder\":      \"#00bc8c\",\n    \"titleColor\":       \"#adb5bd\",\n    \"fontFamily\":       \"Source Sans Pro, Lato, sans-serif\",\n    \"fontSize\":         \"14px\"\n  }\n}}%%\ngraph LR\n    x1[\"x₁\"] & x2[\"x₂\"] & x3[\"x₃\"] & x4[\"x₄\"]\n\n    x1 --&gt;|\"φ\"| A1 & A2 & A3\n    x2 --&gt;|\"φ\"| A1 & A2 & A3\n    x3 --&gt;|\"φ\"| A1 & A2 & A3\n    x4 --&gt;|\"φ\"| A1 & A2 & A3\n\n    A1 & A2 & A3 --&gt;|\"φ\"| B1 & B2\n\n    B1 & B2 --&gt;|\"φ\"| OUT[\"f(x)\"]\n\n    A1[\"Σ φᵢ(xᵢ)\"]\n    A2[\"Σ φᵢ(xᵢ)\"]\n    A3[\"Σ φᵢ(xᵢ)\"]\n    B1[\"Σ φᵢ(xᵢ)\"]\n    B2[\"Σ φᵢ(xᵢ)\"]\n\n    subgraph IN[\"Inputs\"]\n        x1\n        x2\n        x3\n        x4\n    end\n\n    subgraph L1[\"KAN layer 1\"]\n        A1\n        A2\n        A3\n    end\n\n    subgraph L2[\"KAN layer 2\"]\n        B1\n        B2\n    end\n\n    subgraph OUT_G[\"Output\"]\n        OUT\n    end\n\n\n\n\n\n\n# Just for show – full repo is separate\nclass DDN(nn.Module):\n    def __init__(self, input_dim=8, hidden_layers=4, neurons = 128, output_dim=1):\n        \n        super().__init__()\n\n        layers = []\n\n        # Input layer:\n        layers.append(nn.Linear(input_dim, neurons))\n        layers.append(nn.SiLU())\n\n\n        for _ in range(hidden_layers-1): # OBS input är \"hidden\", hence \"-1\"\n            layers.append(nn.Linear(neurons, neurons))\n            layers.append(nn.SiLU())\n        \n\n        self.network = nn.Sequential(*layers)\n\n        # Output layer\n        self.output_price = nn.Linear(neurons, output_dim)\n        self.softplus = nn.Softplus() # Garanterar positiva priser\n\n        self._init_weights()\n\n    def forward(self, x):\n        x1 = self.network(x)\n        y = self.output_price(x1)\n        return self.softplus(y) # &gt; 0 !"
+  },
+  {
+    "objectID": "issues/issue-1.html#what-is-a-kolmogorov-arnold-network",
+    "href": "issues/issue-1.html#what-is-a-kolmogorov-arnold-network",
+    "title": "AI Digest #01 – Welcome to KANs!",
+    "section": "",
+    "text": "KANs replace fixed activation functions with learnable splines.\n\n\n\n\n\n%%{init: {\n  \"theme\": \"base\",\n  \"themeVariables\": {\n    \"background\":       \"#222222\",\n    \"primaryColor\":       \"#2d2d2d\",\n    \"primaryBorderColor\": \"#00bc8c\",\n    \"primaryTextColor\":   \"#ffffff\",\n    \"secondaryColor\":     \"#2d2d2d\",\n    \"tertiaryColor\":      \"#2d2d2d\",\n    \"lineColor\":          \"#00bc8c\",\n    \"edgeLabelBackground\":\"#222222\",\n    \"clusterBkg\":         \"#2d2d2d\",\n    \"clusterBorder\":      \"#00bc8c\",\n    \"titleColor\":       \"#adb5bd\",\n    \"fontFamily\":       \"Source Sans Pro, Lato, sans-serif\",\n    \"fontSize\":         \"14px\"\n  }\n}}%%\ngraph LR\n    x1[\"x₁\"] & x2[\"x₂\"] & x3[\"x₃\"] & x4[\"x₄\"]\n\n    x1 --&gt;|\"φ\"| A1 & A2 & A3\n    x2 --&gt;|\"φ\"| A1 & A2 & A3\n    x3 --&gt;|\"φ\"| A1 & A2 & A3\n    x4 --&gt;|\"φ\"| A1 & A2 & A3\n\n    A1 & A2 & A3 --&gt;|\"φ\"| B1 & B2\n\n    B1 & B2 --&gt;|\"φ\"| OUT[\"f(x)\"]\n\n    A1[\"Σ φᵢ(xᵢ)\"]\n    A2[\"Σ φᵢ(xᵢ)\"]\n    A3[\"Σ φᵢ(xᵢ)\"]\n    B1[\"Σ φᵢ(xᵢ)\"]\n    B2[\"Σ φᵢ(xᵢ)\"]\n\n    subgraph IN[\"Inputs\"]\n        x1\n        x2\n        x3\n        x4\n    end\n\n    subgraph L1[\"KAN layer 1\"]\n        A1\n        A2\n        A3\n    end\n\n    subgraph L2[\"KAN layer 2\"]\n        B1\n        B2\n    end\n\n    subgraph OUT_G[\"Output\"]\n        OUT\n    end\n\n\n\n\n\n\n# Just for show – full repo is separate\nclass DDN(nn.Module):\n    def __init__(self, input_dim=8, hidden_layers=4, neurons = 128, output_dim=1):\n        \n        super().__init__()\n\n        layers = []\n\n        # Input layer:\n        layers.append(nn.Linear(input_dim, neurons))\n        layers.append(nn.SiLU())\n\n\n        for _ in range(hidden_layers-1): # OBS input är \"hidden\", hence \"-1\"\n            layers.append(nn.Linear(neurons, neurons))\n            layers.append(nn.SiLU())\n        \n\n        self.network = nn.Sequential(*layers)\n\n        # Output layer\n        self.output_price = nn.Linear(neurons, output_dim)\n        self.softplus = nn.Softplus() # Garanterar positiva priser\n\n        self._init_weights()\n\n    def forward(self, x):\n        x1 = self.network(x)\n        y = self.output_price(x1)\n        return self.softplus(y) # &gt; 0 !"
+  },
+  {
+    "objectID": "issues/issue-1.html#quick-benchmark",
+    "href": "issues/issue-1.html#quick-benchmark",
+    "title": "AI Digest #01 – Welcome to KANs!",
+    "section": "Quick Benchmark",
+    "text": "Quick Benchmark\n\n\n\nModel\nParameters\nAccuracy\n\n\n\n\nMLP\n10 000\n92%\n\n\nKAN\n6 000\n97%\n\n\n\n\nFull reproducible notebook → your-github-repo/kan-benchmark"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Research & Development Archive",
+    "section": "",
+    "text": "Welcome to the R&D intelligence feed. Select a digest below to review the technical analysis.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAI Digest #01 – Welcome to KANs!\n\n\n\n\n\n\n\n\nMar 1, 2026\n\n\nXXX R&D Team\n\n\n\n\n\nNo matching items"
+  }
+]

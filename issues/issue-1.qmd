@@ -1,0 +1,113 @@
+---
+title: "AI Digest #01 – Welcome to KANs!"
+author: "XXX R&D Team"
+date: "March 2026"
+engine: markdown
+format: html
+---
+
+
+## What is a Kolmogorov-Arnold Network?
+
+KANs replace fixed activation functions with learnable splines.
+
+```{mermaid}
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background":       "#222222",
+    "primaryColor":       "#2d2d2d",
+    "primaryBorderColor": "#00bc8c",
+    "primaryTextColor":   "#ffffff",
+    "secondaryColor":     "#2d2d2d",
+    "tertiaryColor":      "#2d2d2d",
+    "lineColor":          "#00bc8c",
+    "edgeLabelBackground":"#222222",
+    "clusterBkg":         "#2d2d2d",
+    "clusterBorder":      "#00bc8c",
+    "titleColor":       "#adb5bd",
+    "fontFamily":       "Source Sans Pro, Lato, sans-serif",
+    "fontSize":         "14px"
+  }
+}}%%
+graph LR
+    x1["x₁"] & x2["x₂"] & x3["x₃"] & x4["x₄"]
+
+    x1 -->|"φ"| A1 & A2 & A3
+    x2 -->|"φ"| A1 & A2 & A3
+    x3 -->|"φ"| A1 & A2 & A3
+    x4 -->|"φ"| A1 & A2 & A3
+
+    A1 & A2 & A3 -->|"φ"| B1 & B2
+
+    B1 & B2 -->|"φ"| OUT["f(x)"]
+
+    A1["Σ φᵢ(xᵢ)"]
+    A2["Σ φᵢ(xᵢ)"]
+    A3["Σ φᵢ(xᵢ)"]
+    B1["Σ φᵢ(xᵢ)"]
+    B2["Σ φᵢ(xᵢ)"]
+
+    subgraph IN["Inputs"]
+        x1
+        x2
+        x3
+        x4
+    end
+
+    subgraph L1["KAN layer 1"]
+        A1
+        A2
+        A3
+    end
+
+    subgraph L2["KAN layer 2"]
+        B1
+        B2
+    end
+
+    subgraph OUT_G["Output"]
+        OUT
+    end
+```
+
+```python
+# Just for show – full repo is separate
+class DDN(nn.Module):
+    def __init__(self, input_dim=8, hidden_layers=4, neurons = 128, output_dim=1):
+        
+        super().__init__()
+
+        layers = []
+
+        # Input layer:
+        layers.append(nn.Linear(input_dim, neurons))
+        layers.append(nn.SiLU())
+
+
+        for _ in range(hidden_layers-1): # OBS input är "hidden", hence "-1"
+            layers.append(nn.Linear(neurons, neurons))
+            layers.append(nn.SiLU())
+        
+
+        self.network = nn.Sequential(*layers)
+
+        # Output layer
+        self.output_price = nn.Linear(neurons, output_dim)
+        self.softplus = nn.Softplus() # Garanterar positiva priser
+
+        self._init_weights()
+
+    def forward(self, x):
+        x1 = self.network(x)
+        y = self.output_price(x1)
+        return self.softplus(y) # > 0 !
+```
+
+## Quick Benchmark
+| Model | Parameters | Accuracy |
+|-------|------------|----------|
+| MLP   | 10 000     | 92%      |
+| KAN   | 6 000      | 97%      |
+
+> Full reproducible notebook → [your-github-repo/kan-benchmark](https://github.com)
