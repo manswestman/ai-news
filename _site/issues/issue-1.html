@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="XXX R&amp;D Team">
+<meta name="author" content="R&amp;D Team">
 <meta name="dcterms.date" content="2026-03-01">
 
-<title>AI Digest #01 – Welcome to KANs! – XXX AI Digest</title>
+<title>AI Newsletter #01 – Kolmogorov-Arnold Networks! – CAIS Newsletter</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bc37d9c0ab6f13d4ab98928295de8f61.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-680d5288db4b80596baee0ba52469f62.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -112,6 +112,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
 <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -127,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <img src="../logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">XXX AI Digest</span>
+    <span class="navbar-title">CAIS Newsletter</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -156,8 +185,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-is-a-kolmogorov-arnold-network" id="toc-what-is-a-kolmogorov-arnold-network" class="nav-link active" data-scroll-target="#what-is-a-kolmogorov-arnold-network">What is a Kolmogorov-Arnold Network?</a></li>
-  <li><a href="#quick-benchmark" id="toc-quick-benchmark" class="nav-link" data-scroll-target="#quick-benchmark">Quick Benchmark</a></li>
+  <li><a href="#background-and-introduction" id="toc-background-and-introduction" class="nav-link active" data-scroll-target="#background-and-introduction">Background and Introduction</a></li>
+  <li><a href="#unpacking-the-theorem" id="toc-unpacking-the-theorem" class="nav-link" data-scroll-target="#unpacking-the-theorem">Unpacking the Theorem</a></li>
+  <li><a href="#architectural-intuition" id="toc-architectural-intuition" class="nav-link" data-scroll-target="#architectural-intuition">Architectural Intuition</a></li>
+  <li><a href="#why-kans-matter" id="toc-why-kans-matter" class="nav-link" data-scroll-target="#why-kans-matter">Why KANs Matter</a></li>
+  <li><a href="#siren-kan" id="toc-siren-kan" class="nav-link" data-scroll-target="#siren-kan">SIREN-KAN</a></li>
+  <li><a href="#pseudo--code-overview" id="toc-pseudo--code-overview" class="nav-link" data-scroll-target="#pseudo--code-overview">(Pseudo-) Code overview</a></li>
+  <li><a href="#the-stress-test-high-frequency-radial-ripples" id="toc-the-stress-test-high-frequency-radial-ripples" class="nav-link" data-scroll-target="#the-stress-test-high-frequency-radial-ripples">The Stress Test: High-Frequency Radial Ripples</a></li>
+  <li><a href="#experimental-setup" id="toc-experimental-setup" class="nav-link" data-scroll-target="#experimental-setup">Experimental Setup</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#final-comparison" id="toc-final-comparison" class="nav-link" data-scroll-target="#final-comparison">Final Comparison</a></li>
+  <li><a href="#a-note-on-initialization" id="toc-a-note-on-initialization" class="nav-link" data-scroll-target="#a-note-on-initialization">A note on initialization</a></li>
+  <li><a href="#conclusion-and-when-to-use-a-kan" id="toc-conclusion-and-when-to-use-a-kan" class="nav-link" data-scroll-target="#conclusion-and-when-to-use-a-kan">Conclusion and When to Use a KAN</a></li>
   </ul>
 </nav>
     </div>
@@ -166,8 +205,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">AI Digest #01 – Welcome to KANs!</h1>
-</div>
+<h1 class="title">AI Newsletter #01 – Kolmogorov-Arnold Networks!</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Newsletters</div>
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Kolmogorov-Arnold Networks</div>
+    <div class="quarto-category">Neural Networks</div>
+  </div>
+  </div>
 
 
 
@@ -176,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>XXX R&amp;D Team </p>
+             <p>R&amp;D Team </p>
           </div>
   </div>
     
@@ -195,9 +240,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="what-is-a-kolmogorov-arnold-network" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-a-kolmogorov-arnold-network">What is a Kolmogorov-Arnold Network?</h2>
-<p>KANs replace fixed activation functions with learnable splines.</p>
+<div style="height: 40px;">
+
+</div>
+<section id="background-and-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="background-and-introduction">Background and Introduction</h2>
+<blockquote class="blockquote">
+<p>Exploring the power of Kolmogorov-Arnold Networks for smarter, sharper function approximation.</p>
+</blockquote>
+<p>Welcome to our first newsletter! We’ll start with a bit of background on the math and architecture behind KANs, then go through a KAN implementation. The GitHub repo for everything is linked at the end of the article. Along the way, we’ll share some interesting empirical results and try to build an intuition for how it all works. Hope you enjoy it!</p>
+<hr>
+<p><strong>The MLP architecture and limitations</strong><br>
+Standard multi-layer perceptrons (MLPs) place fixed activation functions (ReLU, SiLU, etc.) <em>inside the nodes</em>. Linear transformations (weights) live on the <em>edges</em>. This architecture forces the network to approximate any target function by stitching together many global hyperplanes. This is an approach that works but is extremely parameter-inefficient for smooth, high-frequency, or compositional functions (eg. <span class="math inline">\(f(g(x))\)</span>).</p>
+<p><strong>The KAN architecture and applications</strong><br>
+KANs generated significant excitement in the ML community around 2024, as researchers recognized their potential to drastically improve function representation with fewer parameters and more interpretable structure. The hype was fueled by early benchmarks showing remarkably efficient interpolation, sparking interest in both theoretical exploration and practical applications.</p>
+<p>Kolmogorov-Arnold Networks (KANs) achieve this by mitigating key limitations of traditional neural architectures. They eliminate fixed node activations entirely: every edge becomes a learnable univariate function φ, and every node simply sums its incoming signals. The entire network is thus a composition of univariate functions and summations, precisely the structure promised by the famous Kolmogorov-Arnold representation theorem.</p>
+</section>
+<section id="unpacking-the-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="unpacking-the-theorem">Unpacking the Theorem</h2>
+<p>The Kolmogorov-Arnold representation theorem (refined in the 1960s) states that any continuous multivariate function&nbsp;<span class="math inline">\(f: [0,1]^n \to \mathbb{R}\)</span>&nbsp;can be written as:</p>
+<p><span class="math display">\[f(\mathbf{x}) = \sum_{q=1}^{2n+1} \Phi_q \left( \sum_{p=1}^n \phi_{q,p}(x_p) \right)\]</span></p>
+<p>That’s a fantastic guarantee, but throwing raw equations at a problem doesn’t help us write code. To make this useful, we need to map the math directly to a network architecture.</p>
+<ul>
+<li><p>Inner edges <span class="math inline">\(\phi_{q,p}(x_p)\)</span>: Instead of mixing inputs right away like in an MLP, each input (<span class="math inline">\(x_p\)</span>) is first passed through its own separate 1D function, completely independent of the others.</p></li>
+<li><p>Intermediate nodes <span class="math inline">\(\sum_{p=1}^n\)</span>: After that, the transformed inputs are just added together. No activation here, just a sum.</p></li>
+<li><p>Outer edges <span class="math inline">\(\Phi_q\)</span>: So how do we capture interactions like <span class="math inline">\(x_1 \cdot x_2\)</span> if we only add things? That happens here. A final nonlinear 1D function is applied to the sum, which lets the model represent those interactions.</p></li>
+<li><p>Hidden dimension <span class="math inline">\(2n+1\)</span>: This is the key guarantee. With <span class="math inline">\(n\)</span> inputs, you only need <span class="math inline">\(2n+1\)</span> of these nodes to represent any continuous function (e.g., 5 nodes for 2D input).</p></li>
+</ul>
+</section>
+<section id="architectural-intuition" class="level2">
+<h2 class="anchored" data-anchor-id="architectural-intuition">Architectural Intuition</h2>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -206,58 +278,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre class="mermaid mermaid-js">%%{init: {
   "theme": "base",
   "themeVariables": {
-    "background":       "#222222",
-    "primaryColor":       "#2d2d2d",
+    "background": "#222222",
+    "primaryColor": "#2d2d2d",
     "primaryBorderColor": "#00bc8c",
-    "primaryTextColor":   "#ffffff",
-    "secondaryColor":     "#2d2d2d",
-    "tertiaryColor":      "#2d2d2d",
-    "lineColor":          "#00bc8c",
-    "edgeLabelBackground":"#222222",
-    "clusterBkg":         "#2d2d2d",
-    "clusterBorder":      "#00bc8c",
-    "titleColor":       "#adb5bd",
-    "fontFamily":       "Source Sans Pro, Lato, sans-serif",
-    "fontSize":         "14px"
-  }
+    "primaryTextColor": "#ffffff",
+    "secondaryColor": "#2d2d2d",
+    "tertiaryColor": "#2d2d2d",
+    "lineColor": "#00bc8c",
+    "edgeLabelBackground": "#222222",
+    "clusterBkg": "#2d2d2d",
+    "clusterBorder": "#00bc8c",
+    "titleColor": "#adb5bd",
+    "fontFamily": "Source Sans Pro, Lato, sans-serif",
+    "fontSize": "14px"
+  },
+  "flowchart": {"curve": "basis", "rankSpacing": 85, "nodeSpacing": 105}
 }}%%
 graph LR
-    x1["x₁"] &amp; x2["x₂"] &amp; x3["x₃"] &amp; x4["x₄"]
-
-    x1 --&gt;|"φ"| A1 &amp; A2 &amp; A3
-    x2 --&gt;|"φ"| A1 &amp; A2 &amp; A3
-    x3 --&gt;|"φ"| A1 &amp; A2 &amp; A3
-    x4 --&gt;|"φ"| A1 &amp; A2 &amp; A3
-
-    A1 &amp; A2 &amp; A3 --&gt;|"φ"| B1 &amp; B2
-
-    B1 &amp; B2 --&gt;|"φ"| OUT["f(x)"]
-
-    A1["Σ φᵢ(xᵢ)"]
-    A2["Σ φᵢ(xᵢ)"]
-    A3["Σ φᵢ(xᵢ)"]
-    B1["Σ φᵢ(xᵢ)"]
-    B2["Σ φᵢ(xᵢ)"]
-
-    subgraph IN["Inputs"]
+    %% Define Nodes
+    x1["x₁"]
+    x2["x₂"]
+    
+    %% Connections from x1
+    x1 --&gt;|"φ₁,₁(x₁)"| H1["Σ₁#160;"]
+    x1 --&gt;|"φ₂,₁(x₁)"| H2["Σ₂#160;"]
+    x1 --&gt;|"φ₃,₁(x₁)"| H3["Σ₃#160;"]
+    
+    %% Connections from x2
+    x2 --&gt;|"φ₁,₂(x₂)"| H1
+    x2 --&gt;|"φ₂,₂(x₂)"| H2
+    x2 --&gt;|"φ₃,₂(x₂)"| H3
+    
+    %% Connections to Output
+    H1 --&gt;|"Φ₁(Σ₁)#160;"| OUT["f(x) (Σ)"]
+    H2 --&gt;|"Φ₂(Σ₂)#160;"| OUT
+    H3 --&gt;|"Φ₃(Σ₃)#160;"| OUT
+    
+    %% Subgraphs
+    subgraph IN["Inputs (n)"]
         x1
         x2
-        x3
-        x4
     end
-
-    subgraph L1["KAN layer 1"]
-        A1
-        A2
-        A3
+    
+    subgraph L1["Inner sums (2n+1)"]
+        H1
+        H2
+        H3
     end
-
-    subgraph L2["KAN layer 2"]
-        B1
-        B2
-    end
-
-    subgraph OUT_G["Output"]
+    
+    subgraph OUT_G["Final output"]
         OUT
     end
 </pre>
@@ -266,62 +335,173 @@ graph LR
 </div>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just for show – full repo is separate</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DDN(nn.Module):</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim<span class="op">=</span><span class="dv">8</span>, hidden_layers<span class="op">=</span><span class="dv">4</span>, neurons <span class="op">=</span> <span class="dv">128</span>, output_dim<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        layers <span class="op">=</span> []</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Input layer:</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        layers.append(nn.Linear(input_dim, neurons))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        layers.append(nn.SiLU())</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(hidden_layers<span class="op">-</span><span class="dv">1</span>): <span class="co"># OBS input är "hidden", hence "-1"</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            layers.append(nn.Linear(neurons, neurons))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            layers.append(nn.SiLU())</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.network <span class="op">=</span> nn.Sequential(<span class="op">*</span>layers)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Output layer</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.output_price <span class="op">=</span> nn.Linear(neurons, output_dim)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.softplus <span class="op">=</span> nn.Softplus() <span class="co"># Garanterar positiva priser</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._init_weights()</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        x1 <span class="op">=</span> <span class="va">self</span>.network(x)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="va">self</span>.output_price(x1)</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.softplus(y) <span class="co"># &gt; 0 !</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note: This graph shows a Kolmogorov–Arnold Network (KAN) for <span class="math inline">\((n=2)\)</span>, using three inner nodes for clarity instead of the <span class="math inline">\(2n+1\)</span> required by the theorem.</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(x_i\)</span> (Inputs) : The initial input features fed into the network.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(\phi\)</span> (Edges) : The defining feature of a KAN. Instead of static weights (<span class="math inline">\(w\)</span>), edges contain learnable univariate functions (e.g., B-splines).</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(\sum \phi(x)\)</span> (Nodes) : Nodes simply sum incoming signals. That means no activation, just aggregating the signals!</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><span class="math inline">\(f(x)\)</span> (Output) : The final multivariate function built from compositions of 1D functions.</p>
+</blockquote>
+<p><br></p>
 </section>
-<section id="quick-benchmark" class="level2">
-<h2 class="anchored" data-anchor-id="quick-benchmark">Quick Benchmark</h2>
+<section id="why-kans-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-kans-matter">Why KANs Matter</h2>
+<p>The Kolmogorov-Arnold theorem has been around since the 1950s. What changed is that we can now learn those univariate functions end-to-end with gradient descent, effectively turning a theoretical existence proof into a working architecture.</p>
+<p><strong>Where KANs shine</strong></p>
+<ul>
+<li><p><strong>Scientific discovery and symbolic regression.</strong> Each edge is a univariate function, so you can prune the network and literally read off the learned expression, i.e.&nbsp;“this edge learned <span class="math inline">\(x²\)</span>, that one learned <span class="math inline">\(sin(3πx)\)</span>.” For physics, chemistry, and biology, that could be the foundation for new discoveries!</p></li>
+<li><p><strong>Physics and PDE solvers.</strong> KANs respect compositional structure naturally, so they extrapolate far better than MLPs when solving differential equations outside the training domain.</p></li>
+<li><p><strong>High-frequency and periodic phenomena.</strong> As the radial sine ripple demo will show later, KANs (especially SIREN-KAN variants) can capture rapid oscillations with far fewer parameters.</p></li>
+<li><p><strong>Low-to-medium dimensional problems.</strong> Financial time series, engineering simulations, control systems. Tasks with roughly 2–20 input dimensions, where interpretability and reliable extrapolation are important.</p></li>
+</ul>
+<p><br> <strong>They have been hyped, but is it justified?</strong></p>
+<p>MLPs approximate complex surfaces by overlapping vast numbers of flat hyperplanes. KANs follow the exact decomposition that the theorem guarantees exists, which gives them real structural advantages: often 10–100× fewer parameters on smooth functions, better out-of-distribution behavior, and interpretable edges you can inspect or symbolically regress.</p>
+<p>MLPs are excellent for messy, high-dimensional data like images and text. KANs on the other hand are what you should apply when you suspect there’s an underlying mathematical law to be found.</p>
+</section>
+<section id="siren-kan" class="level2">
+<h2 class="anchored" data-anchor-id="siren-kan">SIREN-KAN</h2>
+<p>The <strong><a href="https://arxiv.org/abs/2404.19756">original KAN paper (Liu et al., 2024)</a></strong> parameterised the univariate edge functions <span class="math inline">\(\phi\)</span> with B-splines. This choice gives excellent localisation and interpretability, but B-splines struggle with high-frequency oscillations (which is what we are going to be testing here!) because they are inherently low-pass (smooth polynomial pieces).</p>
+<p>When people replace B-splines with tiny MLPs (a common simplification in early re-implementations), the network inherits the spectral bias of standard MLPs and fails to capture rapid oscillations.</p>
+<p><br> <strong>The SIREN-KAN solution</strong></p>
+<p>In this implementation we will replace the activation inside each edge with a SIREN-style periodic basis: <span class="math inline">\(sin(\omega_0 x + b)\)</span>. By scaling the first-layer frequencies with <span class="math inline">\(\omega_0\)</span> and using careful initialisation, each univariate edge gains infinite periodic capacity. The result is a network that can learn the exact algebraic structure of high-frequency targets (e.g.&nbsp;sin(polynomial)) with dramatically fewer parameters.</p>
+</section>
+<section id="pseudo--code-overview" class="level2">
+<h2 class="anchored" data-anchor-id="pseudo--code-overview">(Pseudo-) Code overview</h2>
+<p>This is the rough KAN architecture:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># full repo is separate (see bottom)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> KAN_layers:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inner univariate functions (one per edge)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> every input_dim → hidden_dim edge:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        φ <span class="op">=</span> sin(ω₀·x <span class="op">+</span> b)               <span class="co"># SIREN-style</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        edge_out <span class="op">=</span> linear(φ)            <span class="co"># small projection</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> <span class="bu">sum</span>(edge_out over input_dim)    <span class="co"># node sums</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Outer univariate functions</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> every hidden_dim → out_dim edge:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        Φ <span class="op">=</span> sin(ω₀·h <span class="op">+</span> b)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        edge_out <span class="op">=</span> linear(Φ)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="bu">sum</span>(edge_out over hidden_dim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="the-stress-test-high-frequency-radial-ripples" class="level2">
+<h2 class="anchored" data-anchor-id="the-stress-test-high-frequency-radial-ripples">The Stress Test: High-Frequency Radial Ripples</h2>
+<p>Target function (chosen to be analytically simple yet extremely difficult for spectral-biased networks): <span class="math display">\[
+f(x_1, x_2) = \sin\bigl(3\pi(x_1^2 + x_2^2)\bigr)
+\]</span></p>
+<p>This is a radially symmetric sine wave whose frequency increases quadratically with distance from the origin, basically a perfect stress test for extrapolation.</p>
+</section>
+<section id="experimental-setup" class="level2">
+<h2 class="anchored" data-anchor-id="experimental-setup">Experimental Setup</h2>
+<p>To rigorously evaluate whether these architectures actually learn the underlying mathematical rules, we analyzed performance within the training domain and also conducted a strict out-of-distribution (OOD) extrapolation test.</p>
+<ul>
+<li><p><strong>The Competitors:</strong>&nbsp;A standard Multi-Layer Perceptron (two 64-neuron hidden layers, ~4,400 parameters) relying on global hyperplanes, matched against our custom SIREN-KAN (hidden dimension of 5, ~375 parameters) equipped with localized, frequency-scaled sine activations.</p></li>
+<li><p><strong>The Training Domain (Interpolation):</strong>&nbsp;Both models were trained exclusively on uniformly sampled data within the boundary&nbsp;<span class="math inline">\(x_1, x_2 \in [-1.2, 1.2]\)</span>. This provides a solid, bounded view of the central concentric ripples.</p></li>
+<li><p><strong>The Testing Domain (Extrapolation):</strong>&nbsp;We then evaluated their predictive power on an expanded grid spanning&nbsp;<span class="math inline">\([-1.4, 1.4]\)</span>.</p></li>
+</ul>
+<p>Why it matters: Neural networks are usually great at interpolating, but extrapolating? Not so much. If a network just memorizes the space by patching together overlapping linear segments (like a standard MLP), its predictions will fall apart as soon as you move past the <span class="math inline">\(1.2\)</span> boundary.</p>
+<p>On the other hand, if a network’s inductive bias really captures the underlying periodic pattern, the exact boundary shouldn’t matter. Our hypothesis was that the KAN would handle this out-of-domain prediction much better.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<div id="fig-surfaces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../assets/1-kan/MLP_vs_KAN_2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: 3D Surface Comparison: The MLP struggles with high-frequency ripples while the KAN maps them very well.
+</figcaption>
+</figure>
+</div>
+<p>The MLP shows a clear spectral bias: it handles the low-frequency, broad patterns near the origin pretty well, but completely misses the high-frequency details at the edges. The KAN, on the other hand, is much more expressive for this kind of problem, capturing both the coarse structure and the fine oscillations across the whole space.</p>
+<div id="fig-surfaces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../assets/1-kan/MLP_vs_KAN_1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Training Dynamics and Prediction Fidelity.
+</figcaption>
+</figure>
+</div>
+<p><strong>Training Dynamics (Left):</strong></p>
+<p>You can pretty clearly see the MLP struggling during training. It hits a plateau early and then keeps spiking all over the place, which is a classic sign that the optimizer is fighting itself trying to fit high-frequency signals with a rigid structure. The KAN, on the other hand, is much smoother. Around epoch ~450 it actually breaks through that plateau and keeps improving, ending up at a much lower MSE.</p>
+<p><strong>Prediction Fidelity (Right):</strong></p>
+<p>The scatter plot makes it even more obvious. The KAN predictions sit right around the dashed “perfect prediction” line across the whole range. The MLP is way more scattered. You can even see these horizontal bands (especially around y ≈ 0.25), which indicates that it has basically given up and is predicting constant values over big chunks of the input space. It’s not clearly capturing the structure of the data as well as the KAN.</p>
+</section>
+<section id="final-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="final-comparison">Final Comparison</h2>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 16%">
+<col style="width: 36%">
+<col style="width: 27%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Model</th>
-<th>Parameters</th>
-<th>Accuracy</th>
+<th><strong>Architecture</strong></th>
+<th><strong>Parameters</strong></th>
+<th><strong>In-Distribution MSE <span class="math inline">\([-1.2, 1.2]\)</span></strong></th>
+<th><strong>OOD MSE (<span class="math inline">\(&gt; \lvert 1.2 \rvert\)</span>)</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>MLP</td>
-<td>10 000</td>
-<td>92%</td>
+<td><strong>MLP (64x64)</strong></td>
+<td>4,417</td>
+<td>0.1063</td>
+<td>1.8749</td>
 </tr>
 <tr class="even">
-<td>KAN</td>
-<td>6 000</td>
-<td>97%</td>
+<td><strong>SIREN-KAN</strong></td>
+<td>375</td>
+<td>0.0014</td>
+<td>0.2929</td>
 </tr>
 </tbody>
 </table>
+<p><br></p>
+<p><strong>Interpolation:</strong></p>
+<p>Within the training domain, the Kolmogorov-Arnold Network performs exceptionally well. It achieved a near-perfect MSE of 0.0014 compared to the MLP’s 0.1063, a 98.7% reduction in error. It achieves this while using roughly 12x fewer parameters, proving that its periodic 1D edges natively capture high-frequency ripples far better than the MLP’s overlapping global hyperplanes.</p>
+<p><strong>Extrapolation:</strong></p>
+<p>The out-of-distribution test reveals the true power of the architecture’s inductive bias. The MLP fails catastrophically (MSE 1.87). Because it merely memorized the spatial grid, it runs out of hyperplanes past the 1.2 boundary and predicts chaotic noise.</p>
+<p>The SIREN-KAN, however, successfully holds its structural integrity outside the training bounds (MSE 0.29). By deeply converging on the correct phase alignments of its internal sine waves, it managed to parameterize the periodic-quadratic structure well enough to accurately project the ripples into unseen space. <br></p>
+</section>
+<section id="a-note-on-initialization" class="level2">
+<h2 class="anchored" data-anchor-id="a-note-on-initialization">A note on initialization</h2>
+<p>Normal networks “play it safe” and start with tiny weights to keep training stable. But in this case, a sine wave is basically flat around zero. Feed in tiny weights, and every sine in the network acts like a straight line. Your flexible KAN “flatlines” and loses all ability to bend around the data.</p>
+<p><strong>The Fix:</strong></p>
+<p>Borrowing a trick from SIRENs, we amplify the first layer’s weights, say 10×. This pushes signals out of the flat zone and forces the network to hit sine peaks and valleys from Epoch 0.</p>
+<p><strong>The Trade-off:</strong></p>
+<p>A hypersensitive, oscillating landscape means learning rates must be precise, if they are too high, the optimizer will most likely bounce away. SIREN-KANs are extremely powerful, but far less forgiving than standard MLPs in this regard. So we had to initialize them multiple times before achieving a good representation!</p>
+</section>
+<section id="conclusion-and-when-to-use-a-kan" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-and-when-to-use-a-kan">Conclusion and When to Use a KAN</h2>
+<p>Kolmogorov–Arnold Networks actually feel like a different way of thinking about neural networks. Instead of relying on rigid hyperplanes, they learn flexible one-dimensional functions, which lines up nicely with the Kolmogorov–Arnold theorem. In practice, that means better accuracy, far fewer parameters, and models that are easier to interpret.</p>
+<p>The radial ripple experiment makes this pretty clear: about 12× fewer parameters, almost perfect interpolation, and much more stable behavior outside the training range, where a standard MLP tends to fall apart. That’s the core reason KANs (and SIREN-style variants) are getting so much attention.</p>
+<hr>
+<p><strong>Final recommendation - Use a KAN when:</strong></p>
+<ul>
+<li><p>You need parameter-efficient approximation of smooth, highly compositional, or periodic physical/symbolic equations.</p></li>
+<li><p>Interpretability matters — <em>pruning</em> the univariate functions yields human-readable symbolic expressions!</p></li>
+<li><p>You are operating in low-to-medium input dimensionality <span class="math inline">\((n \lesssim 20)\)</span>.</p></li>
+</ul>
+<p><strong>Do NOT use a KAN when</strong></p>
+<ul>
+<li>Input dimensionality is extreme (raw images, text tokens, etc.). The (2n+1) inner-sum expansion becomes a computational bottleneck and standard Transformers or MLPs still dominate here.</li>
+</ul>
+<hr>
+<p>Easiest way to see how it works is to clone the repo!</p>
 <blockquote class="blockquote">
-<p>Full reproducible notebook → <a href="https://github.com">your-github-repo/kan-benchmark</a></p>
+<p>Full reproducible notebook → <a href="https://github.com/manswestman/KAN-basics">manswestman/KAN-basics</a></p>
 </blockquote>
 
 

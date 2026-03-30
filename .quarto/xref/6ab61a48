@@ -1,1 +1,1 @@
-{"entries":[],"headings":["what-is-a-kolmogorov-arnold-network","quick-benchmark"]}
+{"entries":[{"caption":"Training Dynamics and Prediction Fidelity.","key":"fig-surfaces","order":{"number":2,"section":[0,9,0,0,0,0,0]}}],"headings":["background-and-introduction","unpacking-the-theorem","architectural-intuition","why-kans-matter","siren-kan","pseudo--code-overview","the-stress-test-high-frequency-radial-ripples","experimental-setup","results","final-comparison","a-note-on-initialization","conclusion-and-when-to-use-a-kan"]}

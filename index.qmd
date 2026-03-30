@@ -11,4 +11,6 @@ page-layout: full
 title-block-banner: true
 ---
 
-Welcome to the R&D intelligence feed. Select a digest below to review the technical analysis.
+Welcome to the R&D intelligence feed. Here you will find technical analysis, our projects and newsletters!
+<br>
+<br>
