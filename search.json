@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Research & Development Archive",
-    "section": "",
-    "text": "Welcome to the R&D intelligence feed. Here you will find technical analysis, our projects and newsletters!  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAI Newsletter #01 – Kolmogorov-Arnold Networks!\n\n\n\nNewsletters\n\nMachine Learning\n\nKolmogorov-Arnold Networks\n\nNeural Networks\n\n\n\n\n\n\n\n\n\nMar 1, 2026\n\n\nR&D Team\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "issues/issue-1.html#background-and-introduction",
     "href": "issues/issue-1.html#background-and-introduction",
     "title": "AI Newsletter #01 – Kolmogorov-Arnold Networks!",
@@ -89,5 +82,12 @@
     "title": "AI Newsletter #01 – Kolmogorov-Arnold Networks!",
     "section": "Conclusion and When to Use a KAN",
     "text": "Conclusion and When to Use a KAN\nKolmogorov–Arnold Networks actually feel like a different way of thinking about neural networks. Instead of relying on rigid hyperplanes, they learn flexible one-dimensional functions, which lines up nicely with the Kolmogorov–Arnold theorem. In practice, that means better accuracy, far fewer parameters, and models that are easier to interpret.\nThe radial ripple experiment makes this pretty clear: about 12× fewer parameters, almost perfect interpolation, and much more stable behavior outside the training range, where a standard MLP tends to fall apart. That’s the core reason KANs (and SIREN-style variants) are getting so much attention.\n\nFinal recommendation - Use a KAN when:\n\nYou need parameter-efficient approximation of smooth, highly compositional, or periodic physical/symbolic equations.\nInterpretability matters — pruning the univariate functions yields human-readable symbolic expressions!\nYou are operating in low-to-medium input dimensionality \\((n \\lesssim 20)\\).\n\nDo NOT use a KAN when\n\nInput dimensionality is extreme (raw images, text tokens, etc.). The (2n+1) inner-sum expansion becomes a computational bottleneck and standard Transformers or MLPs still dominate here.\n\n\nEasiest way to see how it works is to clone the repo!\n\nFull reproducible notebook → manswestman/KAN-basics"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Research & Development Archive",
+    "section": "",
+    "text": "Welcome to the R&D intelligence feed. Here you will find technical analysis, our projects and newsletters!  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAI Newsletter #01 – Kolmogorov-Arnold Networks!\n\n\n\nNewsletters\n\nMachine Learning\n\nKolmogorov-Arnold Networks\n\nNeural Networks\n\n\n\n\n\n\n\n\n\nMar 1, 2026\n\n\nR&D Team\n\n\n\n\n\nNo matching items"
   }
 ]
