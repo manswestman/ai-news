@@ -14,9 +14,14 @@ git commit -m "Update instructions in README [skip ci]"
 git push origin main
 
 for spacing in the md files:
-<div style="height: 40px;"></div>
+
+"<div style="height: 40px;"></div>"
+
 or
-<br>
+
+"<br>"
+
+"quarto preview" i terminalen för att kika utan att behöva pusha
 
 
 
